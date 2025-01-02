@@ -6,6 +6,11 @@ pipeline {
                 git 'https://github.com/abdul-haq350/Docker_Jenkins_Simple_Project.git'
             }
         }
+        stage('Check Python') { // New stage added here
+            steps {
+                bat 'python --version'
+            }
+        }
         stage('Install Dependencies') {
             steps {
                 bat 'python -m pip install --upgrade pip'
