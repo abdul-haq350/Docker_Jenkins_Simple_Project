@@ -11,6 +11,13 @@ pipeline {
                 bat 'python --version'
             }
         }
+        stage('Check Environment Variables') {
+    steps {
+        bat 'echo %PATH%'
+        bat 'python --version'
+    }
+}
+
         stage('Install Dependencies') {
             steps {
                 bat 'python -m pip install --upgrade pip'
