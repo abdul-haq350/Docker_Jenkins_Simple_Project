@@ -1,5 +1,8 @@
 pipeline {
     agent any
+    environment {
+        DOCKER_IMAGE = 'abdulhaq2919/simple-python-app:latest'
+    }
     stages {
         stage('Clone Repository') {
             steps {
@@ -24,9 +27,16 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                // Push the image directly to Docker Hub without registry if no Docker registry is used
-                bat 'docker tag simple-python-app abdulhaq2919/simple-python-app:latest'
-                bat 'docker push abdulhaq2919/simple-python-app:latest'
+                script {
+                    // Docker Hub credentials
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        bat """
+                            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+                            docker tag simple-python-app ${DOCKER_USERNAME}/simple-python-app:latest
+                            docker push ${DOCKER_USERNAME}/simple-python-app:latest
+                        """
+                    }
+                }
             }
         }
     }
