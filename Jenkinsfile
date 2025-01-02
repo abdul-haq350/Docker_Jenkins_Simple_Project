@@ -7,23 +7,16 @@ pipeline {
             }
         }
         stage('Check Python') {
-    steps {
-        bat 'C:\\Python38\\python.exe --version'  // Use full path to python.exe
-    }
-}
-stage('Install Dependencies') {
-    steps {
-        bat 'C:\\Python38\\python.exe -m pip install --upgrade pip'
-        bat 'C:\\Python38\\Scripts\\pip.exe install -r requirements.txt'
-    }
-}
-        stage('Check Environment Variables') {
-    steps {
-        bat 'echo %PATH%'
-        bat 'python --version'
-    }
-}
-
+            steps {
+                bat 'C:\\Users\\abdul\\AppData\\Local\\Programs\\Python\\Python38\\python.exe --version'
+            }
+        }
+        stage('Install Dependencies') {
+            steps {
+                bat 'C:\\Users\\abdul\\AppData\\Local\\Programs\\Python\\Python38\\python.exe -m pip install --upgrade pip'
+                bat 'C:\\Users\\abdul\\AppData\\Local\\Programs\\Python\\Python38\\Scripts\\pip.exe install -r requirements.txt'
+            }
+        }
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t simple-python-app .'
