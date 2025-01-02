@@ -24,10 +24,9 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                withDockerRegistry([credentialsId: 'docker-hub-credentials', url: '']) {
-                    bat 'docker tag simple-python-app abdulhaq2919/simple-python-app:latest'
-                    bat 'docker push abdulhaq2919/simple-python-app:latest'
-                }
+                // Push the image directly to Docker Hub without registry if no Docker registry is used
+                bat 'docker tag simple-python-app abdulhaq2919/simple-python-app:latest'
+                bat 'docker push abdulhaq2919/simple-python-app:latest'
             }
         }
     }
