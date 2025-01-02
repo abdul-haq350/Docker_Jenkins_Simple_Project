@@ -8,14 +8,18 @@ pipeline {
     stages {
         stage('Clone Repository') {
             steps {
-                // Using native Jenkins git step instead of bat for git clone
                 git "${REPO_URL}"
             }
         }
         stage('Install Dependencies') {
             steps {
-                // Ensure that pip is installed and use the appropriate virtual environment commands if needed
-                bat 'pip install -r requirements.txt'
+                // Ensure Python and pip are installed (check pip version)
+                bat 'python -m ensurepip --upgrade'
+                bat 'python -m pip install --upgrade pip'
+                
+                // Create a virtual environment and install requirements
+                bat 'python -m venv venv'
+                bat 'venv\\Scripts\\activate && pip install -r requirements.txt'
             }
         }
         stage('Build Docker Image') {
@@ -25,7 +29,6 @@ pipeline {
         }
         stage('Push Docker Image') {
             steps {
-                // Use Jenkins credentials for Docker Hub login
                 withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
                     bat "docker login -u ${DOCKER_USER} -p ${DOCKER_PASS}"
                     bat "docker tag ${DOCKER_IMAGE} ${DOCKER_TAG}"
