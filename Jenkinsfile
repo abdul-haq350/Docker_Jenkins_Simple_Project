@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = 'abdulhaq2919/simple-python-app:latest'
+        DOCKER_IMAGE = 'Docker/simple-python-app:latest'
     }
     stages {
         stage('Clone Repository') {
