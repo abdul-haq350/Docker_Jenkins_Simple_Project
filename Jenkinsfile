@@ -6,11 +6,17 @@ pipeline {
                 git 'https://github.com/abdul-haq350/Docker_Jenkins_Simple_Project.git'
             }
         }
-        stage('Check Python') { // New stage added here
-            steps {
-                bat 'python --version'
-            }
-        }
+        stage('Check Python') {
+    steps {
+        bat 'C:\\Python38\\python.exe --version'  // Use full path to python.exe
+    }
+}
+stage('Install Dependencies') {
+    steps {
+        bat 'C:\\Python38\\python.exe -m pip install --upgrade pip'
+        bat 'C:\\Python38\\Scripts\\pip.exe install -r requirements.txt'
+    }
+}
         stage('Check Environment Variables') {
     steps {
         bat 'echo %PATH%'
@@ -18,12 +24,6 @@ pipeline {
     }
 }
 
-        stage('Install Dependencies') {
-            steps {
-                bat 'python -m pip install --upgrade pip'
-                bat 'pip install -r requirements.txt'
-            }
-        }
         stage('Build Docker Image') {
             steps {
                 bat 'docker build -t simple-python-app .'
