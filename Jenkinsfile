@@ -20,24 +20,23 @@ pipeline {
                 bat 'C:\\Users\\abdul\\AppData\\Local\\Programs\\Python\\Python38\\Scripts\\pip.exe install -r requirements.txt'
             }
         }
-        stage('Build Docker Image') {
-            steps {
-                bat 'docker build -t simple-python-app .'
+       stage('Build Docker Image') {
+    steps {
+        bat 'docker build -t abdulhaq2919/simple-python-app:latest .'
+    }
+}
+
+stage('Push Docker Image') {
+    steps {
+        script {
+            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                bat """
+                    docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
+                    docker push ${DOCKER_USERNAME}/simple-python-app:latest
+                """
             }
         }
-        stage('Push Docker Image') {
-            steps {
-                script {
-                    // Docker Hub credentials
-                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                        bat """
-                            docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-                            docker tag simple-python-app ${DOCKER_USERNAME}/simple-python-app:latest
-                            docker push ${DOCKER_USERNAME}/simple-python-app:latest
-                        """
-                    }
-                }
-            }
-        }
+    }
+}
     }
 }
