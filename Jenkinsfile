@@ -22,7 +22,7 @@ pipeline {
         }
         stage('Build Docker Image') {
             steps {
-                bat 'docker build -t ${DOCKER_IMAGE} .'
+                bat "docker build -t ${env.DOCKER_IMAGE} ."
             }
         }
         stage('Push Docker Image') {
@@ -31,7 +31,7 @@ pipeline {
                     withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                         bat """
                             echo ${DOCKER_PASSWORD} | docker login -u ${DOCKER_USERNAME} --password-stdin
-                            docker push ${DOCKER_IMAGE}
+                            docker push ${env.DOCKER_IMAGE}
                         """
                     }
                 }
