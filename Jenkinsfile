@@ -25,7 +25,6 @@ pipeline {
                 bat "docker build -t ${env.DOCKER_IMAGE} ."
             }
         }
-        stage('Push Docker Image') {
     stage('Push Docker Image') {
     steps {
         script {
