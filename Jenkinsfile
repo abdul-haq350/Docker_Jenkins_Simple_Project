@@ -1,7 +1,7 @@
 pipeline {
     agent any
     environment {
-        DOCKER_IMAGE = 'abdulhaq2919/simple-python-app:latest'
+        DOCKER_IMAGE = "${DOCKER_USERNAME}/simple-python-app:latest"
     }
     stages {
         stage('Clone Repository') {
@@ -25,21 +25,19 @@ pipeline {
                 bat "docker build -t ${env.DOCKER_IMAGE} ."
             }
         }
-    stage('Push Docker Image') {
-    steps {
-        script {
-            withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
-                bat """
-                    echo Logging in to Docker Hub...
-                    docker login -u "%DOCKER_USERNAME%" -p "%DOCKER_PASSWORD%" || exit 1
-                    echo Pushing Docker image...
-                    docker push %DOCKER_USERNAME%/simple-python-app:latest || exit 1
-                """
+        stage('Push Docker Image') {
+            steps {
+                script {
+                    withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+                        bat """
+                            echo Logging in to Docker Hub...
+                            echo %DOCKER_PASSWORD% | docker login -u %DOCKER_USERNAME% --password-stdin || exit 1
+                            echo Pushing Docker image...
+                            docker push ${env.DOCKER_IMAGE} || exit 1
+                        """
+                    }
+                }
             }
         }
-    }
-}
-
-
     }
 }
