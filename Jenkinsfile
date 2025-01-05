@@ -26,17 +26,21 @@ pipeline {
             }
         }
         stage('Push Docker Image') {
+    stage('Push Docker Image') {
     steps {
         script {
             withCredentials([usernamePassword(credentialsId: 'docker-hub-credentials', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
                 bat """
-                    docker login -u ${DOCKER_USERNAME} -p ${DOCKER_PASSWORD}
-                    docker push ${DOCKER_USERNAME}/simple-python-app:latest
+                    echo Logging in to Docker Hub...
+                    docker login -u "%DOCKER_USERNAME%" -p "%DOCKER_PASSWORD%" || exit 1
+                    echo Pushing Docker image...
+                    docker push %DOCKER_USERNAME%/simple-python-app:latest || exit 1
                 """
             }
         }
     }
 }
+
 
     }
 }
